@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\GradeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,4 +35,10 @@ Route::post('/delete/{id}', [StudentController::class, 'delete'])->name('delete'
 
 //Teachers Routes
 Route::resource('teachers', TeacherController::class);
+
+//Classroom Routes
+Route::resource('classrooms', ClassroomController::class);
+
+//Grade Routes
+Route::resource('grades', GradeController::class);
 

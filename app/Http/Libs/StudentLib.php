@@ -15,7 +15,7 @@ class StudentLib
      */
     public function index(): object
     {
-        return Student::orderBy('id', 'asc')->paginate(3);
+        return Student::orderBy('id', 'asc')->paginate(7);
     }
 
     /**

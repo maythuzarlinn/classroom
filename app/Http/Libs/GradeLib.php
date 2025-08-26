@@ -2,11 +2,11 @@
 
 namespace App\Http\Libs;
 
-use App\Models\Teacher;
+use App\Models\Grade;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class TeacherLib
+class GradeLib
 {
     /**
      * Get list of resource by ascending order.
@@ -15,7 +15,7 @@ class TeacherLib
      */
     public function index(): object
     {
-        return Teacher::orderBy('id', 'asc')->paginate(7);
+        return Grade::orderBy('id', 'asc')->paginate(7);
     }
 
     /**
@@ -28,7 +28,7 @@ class TeacherLib
         try {
             DB::beginTransaction();
             DB::commit();
-            return Teacher::create($data);
+            return Grade::create($data);
         } catch (Exception $error) {
             report($error);
             DB::rollBack();
@@ -40,14 +40,13 @@ class TeacherLib
      * 
      * @return void
      */
-    public function update($data, $teacher): void
+    public function update($data, $grade): void
     {
         try {
             DB::beginTransaction();
-            Teacher::where('id', $teacher->id)
+            Grade::where('id', $grade->id)
                 ->update([
-                    'name' => $data['name'],
-                    'contact' => $data['contact']
+                    'title' => $data['title'],
                 ]);
             DB::commit();
         } catch (Exception $error) {
@@ -61,12 +60,12 @@ class TeacherLib
      * 
      * @return void
      */
-    public function destroy($teacher): void
+    public function destroy($grade): void
     {
         try {
             DB::beginTransaction();
-            $delete_teacher = Teacher::find($teacher);
-            $delete_teacher->each->delete();
+            $grade = Grade::find($grade);
+            $grade->each->delete();
             DB::commit();
         } catch (Exception $error) {
             report($error);
