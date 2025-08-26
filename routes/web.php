@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\SchoolClassController;
+use App\Http\Controllers\SubjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,4 +44,13 @@ Route::resource('classrooms', ClassroomController::class);
 
 //Grade Routes
 Route::resource('grades', GradeController::class);
+
+//Class Routes
+Route::resource('schoolclasses', SchoolClassController::class);
+
+//Subject Routes
+Route::resource('subjects', SubjectController::class);
+
+//Subject Routes
+Route::resource('attendances', AttendanceController::class);
 

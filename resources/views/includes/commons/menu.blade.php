@@ -9,12 +9,15 @@
         <i class="fa-solid fa-users"></i>
         <span class="d-none d-lg-inline">Students</span>
     </a>
-
     <a href="{{ route('teachers.index') }}" class="list-group-item list-group-item-action">
         <i class="fa-solid fa-user"></i>
         <span class="d-none d-lg-inline">Teachers</span>
     </a>
-    <a href="#" class="list-group-item list-group-item-action">
+    <a href="{{ route('attendances.index') }}" class="list-group-item list-group-item-action">
+        <i class="fa-regular fa-pen-to-square"></i>
+        <span class="d-none d-lg-inline">Attendance</span>
+    </a>    
+    <a href="{{ route('schoolclasses.index') }}" class="list-group-item list-group-item-action">
         <i class="fa-solid fa-flag"></i>
         <span class="d-none d-lg-inline">Classes</span>
     </a>
@@ -32,12 +35,8 @@
         <i class="fa-regular fa-calendar-minus"></i>
         <span class="d-none d-lg-inline">Grade</span>
     </a>
-    <a href="#" class="list-group-item list-group-item-action">
-        <i class="fa-regular fa-pen-to-square"></i>
-        <span class="d-none d-lg-inline">Update Data</span>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
+    <a href="{{ route('subjects.index') }}" class="list-group-item list-group-item-action">
         <i class="fa-regular fa-calendar-days"></i>
-        <span class="d-none d-lg-inline">Add Events</span>
+        <span class="d-none d-lg-inline">Subjects</span>
     </a>
 </div>
