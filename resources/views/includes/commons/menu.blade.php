@@ -1,6 +1,9 @@
 <!-- Categories -->
 <div class="list-group text-center text-lg-start py-3 mt-4">
-    <a href="{{ url('/dashboard') }}" class="list-group-item list-group-item-action mt-4">
+    <span class="list-group-item disabled d-none d-lg-block mt-4">
+        <h5>Classroom management</h5>
+    </span>
+    <a href="{{ url('/dashboard') }}" class="list-group-item list-group-item-action">
         <i class="fa-solid fa-chart-line"></i>
         <span class="d-none d-lg-inline">Dashboard</span>
         <span class="d-none d-lg-inline badge bg-primary rounded-pill float-end">8</span>
@@ -25,7 +28,7 @@
 <!-- Admin Panel -->
 <div class="list-group mt-4 text-center text-lg-start">
     <span class="list-group-item disabled d-none d-lg-block">
-        <h5>School Admin Panel</h5>
+        <h5>School admin panel</h5>
     </span>
     <a href="{{ route('classrooms.index') }}" class="list-group-item list-group-item-action">
         <i class="fa-regular fa-building"></i>
