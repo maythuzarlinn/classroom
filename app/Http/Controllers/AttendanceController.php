@@ -13,7 +13,8 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        //
+        // $classrooms = $this->classroom_lib->index();
+        return view('attendances.index');
     }
 
     /**
@@ -21,7 +22,7 @@ class AttendanceController extends Controller
      */
     public function create()
     {
-        //
+        return view('classrooms.create');
     }
 
     /**
