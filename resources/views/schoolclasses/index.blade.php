@@ -23,6 +23,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>Grade</th>
                     <th>Subject</th>
                     <th>Teacher</th>
                     <th>Room</th>
@@ -34,13 +35,20 @@
             <tbody>
                 @foreach ($classes as $class)
                     <tr>
-                        <td>{{ $class->subject_id }}</td>
-                        <td>{{ $class->teacher_id }}</td>
-                        <td>{{ $class->classroom_id }}</td>
-                        <td>{{ $class->start_time , $class->end_time }}</td>
+                        <td>{{ "" }}</td>
+                        <td>{{ $class->subject }}</td>
+                        <td>{{ $class->teacher }}</td>
+                        <td>{{ $class->classroom }}</td>
+                        <td> {{ date('h:i A', strtotime($class->start_time)) }} -
+                            {{ date('h:i A', strtotime($class->end_time)) }}</td>
                         <td>{{ $class->day_of_week }}</td>
                         <td>
-
+                            <form action="" method="POST">
+                                <a class="btn btn-primary" href="">Edit</a>
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

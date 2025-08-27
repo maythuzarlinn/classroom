@@ -32,7 +32,7 @@
                 @foreach ($subjects as $subject)
                     <tr>
                         <td>{{ $subject->title }}</td>
-                        <td>{{ $subject->grade_id }}</td>
+                        <td>{{ $subject->grade }}</td>
                         <td>
                             <form action="{{ route('subjects.destroy', $subject->id) }}" method="POST">
                                 <a class="btn btn-primary" href="{{ route('subjects.edit', $subject->id) }}">Edit</a>

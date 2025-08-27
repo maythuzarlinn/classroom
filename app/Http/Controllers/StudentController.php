@@ -35,8 +35,9 @@ class StudentController extends Controller
      * @return View
      */
     public function create(): View
-    {
-        return view('students.create');
+    { 
+        $grades = $this->student_lib->getGrades();
+        return view('students.create', compact('grades'));
     }  
    
     /**
@@ -48,7 +49,6 @@ class StudentController extends Controller
     public function store(StudentSave $request): RedirectResponse
     {
         $data = $request->validated();
-
         $this->student_lib->store($data);
 
         return redirect()->route('students.index')->with('success', 'Student has been created successfully.');
@@ -61,8 +61,9 @@ class StudentController extends Controller
      * @return View
      */
     public function edit(Student $student): View
-    {
-        return view('students.edit', compact('student'));
+    { 
+        $grades = $this->student_lib->getGrades();
+        return view('students.edit', compact('student', 'grades'));
     }
   
     /**

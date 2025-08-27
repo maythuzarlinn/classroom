@@ -23,9 +23,11 @@ class StudentSave extends FormRequest
     {
         return [
             'full_name' => 'required',
+            'grade_id' => 'required',
             'date_of_birth' => 'required',
             'parent_name' => 'required',
             'contact' => 'required',
+            'status' => 'required',
         ];
     }
 }

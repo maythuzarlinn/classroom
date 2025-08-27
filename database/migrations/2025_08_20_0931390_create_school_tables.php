@@ -12,7 +12,9 @@ class CreateSchoolTables extends Migration
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Subject
@@ -20,14 +22,18 @@ class CreateSchoolTables extends Migration
             $table->id();
             $table->string('title');
             $table->foreignId('grade_id')->constrained('grades')->onDelete('cascade');
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Classroom
         Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Teacher
@@ -35,11 +41,13 @@ class CreateSchoolTables extends Migration
             $table->id();
             $table->string('name');
             $table->string('contact')->nullable();
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Class
-        Schema::create('classes', function (Blueprint $table) {
+        Schema::create('school_classes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('classroom_id')->constrained('classrooms')->onDelete('cascade');
             $table->string('day_of_week');
@@ -47,27 +55,45 @@ class CreateSchoolTables extends Migration
             $table->time('end_time');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->foreignId('teacher_id')->constrained('teachers')->onDelete('cascade');
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Student
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
+            $table->integer('grade_id')->nullable()->constrained();
             $table->date('date_of_birth');
             $table->string('parent_name');
-            $table->string('contact')->nullable();
-            $table->timestamps();
+            $table->string('contact');
+            $table->enum('status', ['active', 'inactive']);
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
+        });
+
+        // class_student
+        Schema::create('class_students', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('school_class_id')->constrained('school_classes')->onDelete('cascade');
+            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Attendance
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->foreignId('class_id')->constrained('classes')->onDelete('cascade');
+            $table->foreignId('school_class_id')->constrained('school_classes')->onDelete('cascade');
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
             $table->enum('status', ['present', 'absent', 'late']);
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Assignments
@@ -77,7 +103,9 @@ class CreateSchoolTables extends Migration
             $table->text('description')->nullable();
             $table->date('deadline');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Assignment Results
@@ -86,7 +114,9 @@ class CreateSchoolTables extends Migration
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
             $table->foreignId('assignment_id')->constrained('assignments')->onDelete('cascade');
             $table->decimal('mark', 5, 2)->nullable();
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Exam
@@ -95,7 +125,9 @@ class CreateSchoolTables extends Migration
             $table->date('date');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->text('description')->nullable();
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Exam Results
@@ -104,7 +136,9 @@ class CreateSchoolTables extends Migration
             $table->foreignId('exam_id')->constrained('exams')->onDelete('cascade');
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
             $table->decimal('mark', 5, 2)->nullable();
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Test
@@ -113,7 +147,9 @@ class CreateSchoolTables extends Migration
             $table->date('date');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->text('description')->nullable();
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
 
         // Test Results
@@ -122,13 +158,14 @@ class CreateSchoolTables extends Migration
             $table->foreignId('test_id')->constrained('tests')->onDelete('cascade');
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
             $table->decimal('mark', 5, 2)->nullable();
-            $table->timestamps();
+            $table->datetime('created_at')->nullable()->constrained();
+            $table->datetime('updated_at')->nullable()->constrained();
+            $table->datetime('deleted_at')->nullable()->constrained();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('test_results');
         Schema::dropIfExists('tests');
         Schema::dropIfExists('exam_results');
         Schema::dropIfExists('exams');
@@ -136,7 +173,7 @@ class CreateSchoolTables extends Migration
         Schema::dropIfExists('assignments');
         Schema::dropIfExists('attendances');
         Schema::dropIfExists('students');
-        Schema::dropIfExists('classes');
+        Schema::dropIfExists('school_classes');
         Schema::dropIfExists('teachers');
         Schema::dropIfExists('classrooms');
         Schema::dropIfExists('subjects');

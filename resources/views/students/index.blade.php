@@ -23,22 +23,26 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>No</th>
+                <th>Roll.no</th>
                 <th>Name</th>
+                <th>Grade</th>
                 <th>Date of Birth</th>
                 <th>Parent Name</th>
                 <th>Contact</th>
+                <th>Status</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($students as $student)
             <tr>
-                <td>{{ $student->id }}</td>
+                <td class="text-center">{{ $student->id }}</td>
                 <td>{{ $student->full_name }}</td>
+                <td>{{ $student->grade}}</td>
                 <td>{{ $student->date_of_birth }}</td>
                 <td>{{ $student->parent_name }}</td>
                 <td>{{ $student->contact }}</td>
+                <td>{{ $student->status }}</td>
                 <td>
                     <form action="{{ route('students.destroy', $student->id) }}" method="Put">
                         <a class="btn btn-primary" href="{{ route('students.edit', $student->id) }}">Edit</a>

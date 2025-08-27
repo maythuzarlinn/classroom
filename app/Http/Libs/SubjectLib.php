@@ -16,7 +16,16 @@ class SubjectLib
      */
     public function index(): object
     {
-        return Subject::orderBy('id', 'asc')->paginate(7);
+        $subject_list = DB::table('subjects')
+            ->when(request('search'), function ($query) {
+                $query->where('subjects.name', 'like', '%' . request('search') . '%');
+            })
+            ->whereNull('subjects.deleted_at')
+            ->join('grades as grade', 'subjects.grade_id', '=', 'grade.id')
+            ->select('subjects.*', 'grade.title as grade')
+            ->orderBy('id', 'asc')
+            ->paginate(7);
+        return $subject_list;
     }
 
     /**

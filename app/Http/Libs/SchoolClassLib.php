@@ -18,7 +18,18 @@ class SchoolClassLib
      */
     public function index(): object
     {
-        return SchoolClass::orderBy('id', 'asc')->paginate(7);
+        $school_class_list = DB::table('school_classes')
+            ->when(request('search'), function ($query) {
+                $query->where('school_classes.id', 'like', '%' . request('search') . '%');
+            })
+            ->whereNull('school_classes.deleted_at')
+            ->join('teachers as teacher', 'school_classes.teacher_id', '=', 'teacher.id')
+            ->join('classrooms as classroom', 'school_classes.classroom_id', '=', 'classroom.id')
+            ->join('subjects as subject', 'school_classes.subject_id', '=', 'subject.id')
+            ->select('school_classes.*','teacher.name as teacher', 'classroom.name as classroom', 'subject.title as subject')
+            ->orderBy('id', 'asc')
+            ->paginate(7);
+        return $school_class_list;
     }
 
     /**
