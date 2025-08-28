@@ -53,4 +53,9 @@ Route::resource('subjects', SubjectController::class);
 
 //Subject Routes
 Route::resource('attendances', AttendanceController::class);
-
+Route::namespace('Attendance')->prefix('attendance')->name('attendance.')->group(function () {
+Route::get('/grade/{id}', [AttendanceController::class, 'show'])->name('grade');
+Route::post('/grade/{id}', [AttendanceController::class, 'show'])->name('grade');
+Route::get('/delete/{id}', [AttendanceController::class, 'delete'])->name('delete');
+Route::post('/delete/{id}', [AttendanceController::class, 'delete'])->name('delete');
+});

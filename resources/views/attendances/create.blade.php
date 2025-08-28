@@ -1,45 +1,45 @@
 @extends('home')
 
 @section('content')
-<div class="container py-4 mt-4">
-    <div class="row mb-2 mt-3">
-    </div>
-
-    @if (session('status'))
-        <div class="alert alert-success mb-1 mt-1">
-            {{ session('status') }}
-        </div>
-    @endif
-
-    <!-- Card Wrapper -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Attendance Registration</h5>
-        </div>
-        <div class="card-body">
-            <form action="{{ route('attendances.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-
-                <!-- Attendance Name -->
-                    <!-- Classroom -->
-                    <div class="mb-3">
-                        <label for="classroom_id" class="form-label">Classroom</label>
-                        <select name="classroom_id" id="classroom_id" class="form-select" required>
-                            <option value="">-- Select Classroom --</option>
-                            {{-- @foreach ($classrooms as $classroom) --}}
-                                <option value="{{ }}">{{ A-001 }}</option>
-                            {{-- @endforeach --}}
-                        </select>
-                    </div>
-
-                <!-- Submit -->
-                <div class="text-end">
-                    <button type="submit" class="btn btn-success">
-                        Save
-                    </button>
+    <div class="container py-3 mt-2">
+        <div class="row py-3 mt-4">
+            <div class="col-lg-12 margin-tb">
+                <div class="pull-left">
+                    <h3>Attendance Information</h3>
                 </div>
-            </form>
+            </div>
+        </div>
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                <p>{{ $message }}</p>
+            </div>
+        @endif
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th width="280px">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($grades as $grade)
+                    <tr>
+                        <td>{{ $grade->title }}</td>
+                        <td>
+                            <form action="" method="POST">
+                                <a class="btn btn-primary" href="{{ route('attendance.grade', $grade->id) }}">
+                                <i class="fa-solid fa-plus text-light"></i>
+                                <span class="d-none d-lg-inline text-light"> Add attendances </span>                                    
+                                </a>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        {{-- Pagination --}}
+        <div class="d-flex justify-content-end">
+            {!! $grades->links() !!}
         </div>
     </div>
-</div>
 @endsection

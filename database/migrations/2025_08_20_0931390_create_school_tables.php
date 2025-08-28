@@ -88,7 +88,7 @@ class CreateSchoolTables extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->foreignId('school_class_id')->constrained('school_classes')->onDelete('cascade');
+            $table->foreignId('grade_id')->constrained('grades')->onDelete('cascade');
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
             $table->enum('status', ['present', 'absent', 'late']);
             $table->datetime('created_at')->nullable()->constrained();

@@ -50,7 +50,7 @@
                                     @enderror
                                 </div>
                             </div>
-
+                       
                             <!-- Date of birth -->
                             <div class="row mb-4 align-items-center">
                                 <label class="col-sm-3 col-form-label text-end">Date of birth</label>

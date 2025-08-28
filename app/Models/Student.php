@@ -11,4 +11,10 @@ class Student extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['full_name', 'grade_id', 'date_of_birth', 'parent_name', 'contact', 'status'];
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'student_id');
+    }   
+
 }
