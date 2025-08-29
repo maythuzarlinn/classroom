@@ -15,4 +15,9 @@ class Teacher extends Model
     {
         return $this->hasMany(SchoolClass::class, 'teacher_id');
     }
+
+    public function assignments()
+    {
+        return $this->hasMany(Assignment::class, 'teacher_id');
+    }
 }

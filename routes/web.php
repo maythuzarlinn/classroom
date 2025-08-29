@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AttendanceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
@@ -58,4 +59,13 @@ Route::get('/grade/{id}', [AttendanceController::class, 'show'])->name('grade');
 Route::post('/grade/{id}', [AttendanceController::class, 'show'])->name('grade');
 Route::get('/delete/{id}', [AttendanceController::class, 'delete'])->name('delete');
 Route::post('/delete/{id}', [AttendanceController::class, 'delete'])->name('delete');
+});
+
+//Assignment Routes
+Route::resource('assignments', AssignmentController::class);
+Route::namespace('Attendance')->prefix('attendance')->name('attendance.')->group(function () {
+Route::get('/grade/{id}', [AssignmentController::class, 'show'])->name('grade');
+Route::post('/grade/{id}', [AssignmentController::class, 'show'])->name('grade');
+Route::get('/delete/{id}', [AssignmentController::class, 'delete'])->name('delete');
+Route::post('/delete/{id}', [AssignmentController::class, 'delete'])->name('delete');
 });

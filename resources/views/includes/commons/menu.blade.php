@@ -16,7 +16,7 @@
         <i class="fa-regular fa-pen-to-square"></i>
         <span class="d-none d-lg-inline">Attendance</span>
     </a>
-    <a href="#" class="list-group-item list-group-item-action">
+    <a href="{{ route('assignments.index') }}" class="list-group-item list-group-item-action">
         <i class="fa-solid fa-folder-open"></i>
         <span class="d-none d-lg-inline">Assignments</span>
     </a>

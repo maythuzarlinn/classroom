@@ -102,7 +102,11 @@ class CreateSchoolTables extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->date('deadline');
+            $table->integer('day_left')->nullable()->constrained();
+            $table->foreignId('grade_id')->constrained('grades')->onDelete('cascade');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
+            $table->foreignId('teacher_id')->constrained('teachers')->onDelete('cascade');
+            $table->enum('status', ['submitted', ' unsubmitted']);
             $table->datetime('created_at')->nullable()->constrained();
             $table->datetime('updated_at')->nullable()->constrained();
             $table->datetime('deleted_at')->nullable()->constrained();

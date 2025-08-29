@@ -30,7 +30,7 @@
                 </main>
             </div>
             <!-- Footer -->
-            @include('includes.commons.footer')
+            {{-- @include('includes.commons.footer') --}}
         </div>
     </diV>
     <!-- Fonts -->
