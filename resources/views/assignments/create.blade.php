@@ -47,14 +47,15 @@
                             <div class="row mb-4 align-items-center">
                                 <label class="col-sm-3 col-form-label text-end">Due Date</label>
                                 <div class="col-sm-9">
-                                    <input id="deadline" type="date" name="deadline" value=""
+                                    <input id="datepicker" type="date" name="deadline" value=""
                                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                        onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="">
+                                     placeholder="yyyy-mm-dd">
                                     @error('deadline')
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>                            
+                            </div>    
+                            
                             <!-- Grade -->
                             <div class="row mb-4 align-items-center">
                                 <label for="grade_id" class="col-sm-3 col-form-label text-end">Grade</label>
@@ -126,4 +127,12 @@
             <div>
         </div>
     <div>
+@endsection
+@section('script')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#datepicker", {
+        dateFormat: "Y-m-d", // format for saving in DB
+    });
+</script>
 @endsection

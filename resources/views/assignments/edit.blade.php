@@ -12,24 +12,51 @@
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-sm mt-3">
                     <div class="card-header custom-navbar text-white">
-                        <h5 class="mb-0">Attendance Edit</h5>
+                        <h5 class="mb-0">Assignment Edit</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('attendances.update', $attendance->id) }}" method="POST"
-                            enctype="multipart/form-data">
+                        <form action="{{ route('assignments.update', $assignment->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
-                            <!-- Date -->
+
+                            <!-- Title -->
                             <div class="row mb-4 align-items-center">
-                                <label class="col-sm-3 col-form-label text-end">Date of birth</label>
+                                <label for="title" class="col-sm-3 col-form-label text-end">Title</label>
                                 <div class="col-sm-9">
-                                    <input id="date" type="date" name="date"
-                                        value="{{ old('date', $attendance->date) }}" class="form-control">
-                                    @error('date')
+                                    <input type="text" name="title" id="title"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        value="{{ old('title', $assignment->title) }}" placeholder="Eg. Assignment_01">
+                                    @error('title')
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
+
+                            <!-- Description -->
+                            <div class="row mb-4 align-items-center">
+                                <label for="description" class="col-sm-3 col-form-label text-end">Description</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="description" id="description"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        value="{{ old('description', $assignment->description) }}" placeholder="Eg.Lesson-1 exercise">
+                                    @error('description')
+                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <!-- Due Date-->
+                            <div class="row mb-4 align-items-center">
+                                <label class="col-sm-3 col-form-label text-end">Due Date</label>
+                                <div class="col-sm-9">
+                                    <input id="datepicker" type="date" name="deadline" value="{{ old('deadline', $assignment->deadline) }}"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                     placeholder="yyyy-mm-dd">
+                                    @error('deadline')
+                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>    
+                            
                             <!-- Grade -->
                             <div class="row mb-4 align-items-center">
                                 <label for="grade_id" class="col-sm-3 col-form-label text-end">Grade</label>
@@ -39,7 +66,7 @@
                                         <option value=""> Select Grade </option>
                                         @foreach ($grades as $grade)
                                             <option value="{{ $grade->id }}"
-                                                {{ old('grade_id', $attendance->grade_id) == $grade->id ? 'selected' : '' }}>
+                                                {{ old('grade_id', $assignment->grade_id) == $grade->id ? 'selected' : '' }}>
                                                 {{ $grade->title }}
                                             </option>
                                         @endforeach
@@ -49,42 +76,40 @@
                                     @enderror
                                 </div>
                             </div>
-                            <!-- Name -->
+                            <!-- Subject -->
                             <div class="row mb-4 align-items-center">
-                                <label for="full_name" class="col-sm-3 col-form-label text-end">Name</label>
+                                <label for="subject_id" class="col-sm-3 col-form-label text-end">Subject</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="full_name" id="full_name"
-                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                        value="{{ $attendance->student->full_name ?? ''  }}" placeholder="Eg. Aung Aung">
-                                    <!-- Hidden input to submit the student_id -->
-                                    <input type="hidden" name="student_id" value="{{ $attendance->student_id }}">                                        
-                                    @error('full_name')
+                                    <select name="subject_id" id="subject_id"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        <option value=""> Select Subject </option>
+                                        @foreach ($subjects as $subject)
+                                            <option value="{{ $subject->id }}"
+                                                {{ old('subject_id', $assignment->subject_id) == $subject->id ? 'selected' : '' }}>
+                                                {{ $subject->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('subject_id')
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-
-                            <!-- Status -->
+                            <!-- Assigned by  -->
                             <div class="row mb-4 align-items-center">
-                                <label class="col-sm-3 col-form-label text-end">Status</label>
-                                <div class="col-sm-9 items-center space-x-4 mt-1">
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="status" value="present"
-                                            {{ old('status', $attendance->status) == 'present' ? 'checked' : '' }}>
-                                        <span class="ml-2">Present</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="status" value="absent"
-                                            {{ old('status', $attendance->status) == 'absent' ? 'checked' : '' }}>
-                                        <span class="ml-2">Absent</span>
-                                    </label>
-                                   <label class="inline-flex items-center">
-                                        <input type="radio" name="status" value="late"
-                                            {{ old('status', $attendance->status) == 'late' ? 'checked' : '' }}>
-                                        <span class="ml-2">Late</span>
-                                    </label>                                    
-
-                                    @error('status')
+                                <label for="teacher_id" class="col-sm-3 col-form-label text-end">Assigned by</label>
+                                <div class="col-sm-9">
+                                    <select name="teacher_id" id="teacher_id"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        <option value=""> Select teacher </option>
+                                        @foreach ($teachers as $teacher)
+                                            <option value="{{ $teacher->id }}"
+                                                {{ old('teacher_id', $assignment->teacher_id) == $teacher->id ? 'selected' : '' }}>
+                                                {{ $teacher->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('teacher_id')
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -103,4 +128,12 @@
             <div>
         </div>
     <div>
+@endsection
+@section('script')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#datepicker", {
+        dateFormat: "Y-m-d", // format for saving in DB
+    });
+</script>
 @endsection

@@ -14,14 +14,14 @@ class AssignmentController extends Controller
     public function __construct(AssignmentLib $assignment_lib)
     {
         $this->assignment_lib = $assignment_lib;
-    }    
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-         $assignments = $this->assignment_lib->index();
-         return view('assignments.index', compact('assignments'));
+        $assignments = $this->assignment_lib->index();
+        return view('assignments.index', compact('assignments'));
     }
 
     /**
@@ -32,7 +32,7 @@ class AssignmentController extends Controller
         $grades = $this->assignment_lib->getGrades();
         $subjects = $this->assignment_lib->getSubjects();
         $teachers = $this->assignment_lib->getTeachers();
-        return view('assignments.create', compact('grades','subjects','teachers'));
+        return view('assignments.create', compact('grades', 'subjects', 'teachers'));
     }
 
     /**
@@ -47,9 +47,9 @@ class AssignmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $assignment, $grade_id)
+    public function show(Assignment $assignment, $assignment_data)
     {
-        dd($grade_id);
+        dd($assignment_data);
         $students_by_grade = $this->assignment_lib->getStudentByGrade($grade_id);
         return view('assignments.grade', compact('students_by_grade', 'grade_id'));
     }
@@ -59,7 +59,10 @@ class AssignmentController extends Controller
      */
     public function edit(Assignment $assignment)
     {
-        //
+        $grades = $this->assignment_lib->getGrades();
+        $subjects = $this->assignment_lib->getSubjects();
+        $teachers = $this->assignment_lib->getTeachers();
+        return view('assignments.edit', compact('assignment', 'grades', 'subjects', 'teachers'));
     }
 
     /**
@@ -67,14 +70,19 @@ class AssignmentController extends Controller
      */
     public function update(storeAssignmentRequest $request, Assignment $assignment)
     {
-        //
+        $request->validated();
+        $this->assignment_lib->update($request->all(), $assignment);
+
+        return redirect()->route('assignments.index')->with('success', 'Assignment has been updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Assignment $assignment)
+    public function delete($id)
     {
-        //
+         $this->assignment_lib->destroy($id);
+
+        return redirect()->route('assignments.index')->with('success', 'Assignment has been deleted successfully');
     }
 }

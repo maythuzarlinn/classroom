@@ -44,12 +44,11 @@
                         <td>{{ $assignment->day_left }}</td>
                         <td>{{ $assignment->teacher }}</td>
                         <td>
-                            <form action="" method="POST">
-                                <a class="btn" href="{{ route('assignments.show', $assignment->grade_id) }}">view</a>
-                                <a class="btn btn-primary" href="">Edit</a>
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                            <form action="{{ route('assignments.destroy', $assignment->id) }}" method="PUT">
+                                <a class="btn" href="{{ route('assignment.grade', ['id' => $assignment->grade_id, 'assignment' => $assignment->id]) }}">View</a>
+                                <a class="btn btn-primary" href="{{ route('assignments.edit', $assignment->id) }}">Edit</a>
+                                <button type="submit" formaction="{{ route('assignment.delete', $assignment->id) }}"
+                                    class="btn btn-danger">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -59,6 +58,6 @@
         {{-- Pagination --}}
         <div class="d-flex justify-content-end">
             {!! $assignments->links() !!}
-        </div>        
+        </div>
     </div>
 @endsection

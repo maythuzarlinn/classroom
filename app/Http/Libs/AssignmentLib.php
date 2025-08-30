@@ -51,7 +51,11 @@ class AssignmentLib
      */
     public function getSubjects(): object
     {
-        return Subject::all();
+        $subjects = Subject::selectRaw('MIN(id) as id, title, MIN(grade_id) as grade_id')
+            ->groupBy('title')
+            ->get();
+
+        return $subjects;
     }
     /**
      * Get list of resource by ascending order.
@@ -68,7 +72,7 @@ class AssignmentLib
     {
         $student_list_by_grade = Student::where('grade_id', $grade_id)
             ->orderBy('id', 'asc')   // optional, for consistent ordering
-            ->paginate(5);          // 10 students per page
+            ->get();          // 10 students per page
 
         return $student_list_by_grade;
     }
@@ -108,22 +112,30 @@ class AssignmentLib
      * 
      * @return void
      */
-    public function update($data, $attendance): void
+    public function update($data, $assignment)
     {
+        // Calculate days left until deadline
+        $dayLeft = max(0, now()->diffInDays(\Carbon\Carbon::parse($data['deadline']), false));
+
         try {
-            // DB::beginTransaction();
-            // Attendance::where('id', $attendance->id)
-            //     ->update([
-            //         'date' => $datadate,
-            //         'grade_id' => $datagrade_id,
-            //         'student_id' => $datastudent_id,
-            //         'status' => $datastatus,
-            //     ]);
-            // DB::commit();
+            DB::beginTransaction();
+
+            Assignment::where('id', $assignment->id)
+                ->update([
+                    'title' => $data['title'],
+                    'description' => $data['description'],
+                    'deadline' => $data['deadline'],
+                    'day_left' => $dayLeft,
+                    'grade_id' => $data['grade_id'],
+                    'subject_id' => $data['subject_id'],
+                    'teacher_id' => $data['teacher_id'],
+                ]);
+            DB::commit();
         } catch (Exception $error) {
             report($error);
             DB::rollBack();
-        };
+            return false;
+        }
     }
 
     /**
@@ -135,7 +147,7 @@ class AssignmentLib
     {
         try {
             DB::beginTransaction();
-            Attendance::where('id', $id)->delete();
+            Assignment::where('id', $id)->delete();
             DB::commit();
         } catch (Exception $error) {
             report($error);
