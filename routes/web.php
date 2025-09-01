@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\SubjectController;
@@ -68,4 +69,12 @@ Route::get('/grade/{id}/{assignment_id}', [AssignmentController::class, 'show'])
 Route::post('/grade/{id}/{assignment_id}', [AssignmentController::class, 'show'])->name('grade');
 Route::get('/delete/{id}', [AssignmentController::class, 'delete'])->name('delete');
 Route::post('/delete/{id}', [AssignmentController::class, 'delete'])->name('delete');
+});
+
+//Exam Routes
+Route::resource('exams', ExamController::class);
+Route::namespace('Exam')->prefix('exam')->name('exam.')->group(function () {
+Route::get('/delete/{id}', [ExamController::class, 'delete'])->name('delete');
+Route::post('/delete/{id}', [ExamController::class, 'delete'])->name('delete');
+Route::get('/result', [ExamController::class, 'result'])->name('result');
 });

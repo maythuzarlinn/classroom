@@ -20,10 +20,14 @@
         <i class="fa-solid fa-folder-open"></i>
         <span class="d-none d-lg-inline">Assignments</span>
     </a>
-    <a href="#" class="list-group-item list-group-item-action">
+    <a href="{{ route('exams.index') }}" class="list-group-item list-group-item-action">
         <i class="fa-regular fa-calendar-days"></i>
-        <span class="d-none d-lg-inline">Exam / Test</span>
-    </a>    
+        <span class="d-none d-lg-inline">Exam / Test Schedule</span>
+    </a>  
+    <a href="{{ route('exam.result') }}" class="list-group-item list-group-item-action">
+        <i class="fa-regular fa-calendar-days"></i>
+        <span class="d-none d-lg-inline">Exam Result</span>
+    </a>   
 </div>
 <!-- Admin Panel -->
 <div class="list-group mt-4 text-center text-lg-start">
