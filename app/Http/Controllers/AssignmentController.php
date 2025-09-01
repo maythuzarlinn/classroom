@@ -6,6 +6,7 @@ use App\Http\Libs\AssignmentLib;
 use App\Models\Assignment;
 use App\Http\Requests\StoreAssignmentRequest;
 use App\Http\Requests\UpdateAssignmentRequest;
+use Illuminate\Http\Request;
 
 class AssignmentController extends Controller
 {
@@ -47,11 +48,19 @@ class AssignmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Assignment $assignment, $assignment_data)
+    public function show(Request $request,Assignment $assignment, $grade_id, $assignment_id)
     {
-        dd($assignment_data);
         $students_by_grade = $this->assignment_lib->getStudentByGrade($grade_id);
-        return view('assignments.grade', compact('students_by_grade', 'grade_id'));
+        
+        $assignment = $this->assignment_lib->getSelectedAssignment($assignment_id);
+        $status = $assignment->status ? json_decode($assignment->status, true) : [];
+
+        if ($request->isMethod('post')) {
+            $this->assignment_lib->store_assignment_status($request, $assignment_id);
+            return redirect()->route('assignments.index')->with('success', 'Assignment has been created successfully.');;
+        }
+        return view('assignments.grade', compact('assignment', 'students_by_grade', 'grade_id', 'assignment_id', 'status'));
+       
     }
 
     /**
@@ -81,7 +90,7 @@ class AssignmentController extends Controller
      */
     public function delete($id)
     {
-         $this->assignment_lib->destroy($id);
+        $this->assignment_lib->destroy($id);
 
         return redirect()->route('assignments.index')->with('success', 'Assignment has been deleted successfully');
     }

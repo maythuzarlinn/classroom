@@ -64,8 +64,8 @@ Route::post('/delete/{id}', [AttendanceController::class, 'delete'])->name('dele
 //Assignment Routes
 Route::resource('assignments', AssignmentController::class);
 Route::namespace('Assignment')->prefix('assignment')->name('assignment.')->group(function () {
-Route::get('/grade/{id}/{assignment}', [AssignmentController::class, 'show'])->name('assignment.grade');
-Route::post('/grade/{id}/{assignment}', [AssignmentController::class, 'show'])->name('grade');
+Route::get('/grade/{id}/{assignment_id}', [AssignmentController::class, 'show'])->name('grade');
+Route::post('/grade/{id}/{assignment_id}', [AssignmentController::class, 'show'])->name('grade');
 Route::get('/delete/{id}', [AssignmentController::class, 'delete'])->name('delete');
 Route::post('/delete/{id}', [AssignmentController::class, 'delete'])->name('delete');
 });

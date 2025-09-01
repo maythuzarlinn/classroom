@@ -77,6 +77,23 @@ class AssignmentLib
         return $student_list_by_grade;
     }
 
+    public function getSelectedAssignment($assignment_id): object
+    {
+        return DB::table('assignments')
+            ->where('assignments.id', $assignment_id)
+            ->whereNull('assignments.deleted_at')
+            ->join('teachers as teacher', 'assignments.teacher_id', '=', 'teacher.id')
+            ->join('subjects as subject', 'assignments.subject_id', '=', 'subject.id')
+            ->join('grades as grade', 'assignments.grade_id', '=', 'grade.id')
+            ->select(
+                'assignments.*',
+                'teacher.name as teacher',
+                'subject.title as subject',
+                'grade.title as grade'
+            )
+            ->first();
+    }
+
     /**
      * Store resource.
      * 
@@ -101,6 +118,27 @@ class AssignmentLib
                 'teacher_id'  => $request->teacher_id,
                 'status'      => null, // default status if you want
             ]);
+        } catch (Exception $error) {
+            report($error);
+            DB::rollBack();
+        };
+    }
+
+    /**
+     * Store resource.
+     * 
+     * @return object
+     */
+    public function store_assignment_status($request, $assignment_id)
+    {
+        // Save assignment
+        try {
+            DB::beginTransaction();
+            DB::commit();
+            return  Assignment::where('id', $assignment_id)
+                ->update([
+                    'status' => json_encode($request['status']),
+                ]);
         } catch (Exception $error) {
             report($error);
             DB::rollBack();

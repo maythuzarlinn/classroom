@@ -106,7 +106,7 @@ class CreateSchoolTables extends Migration
             $table->foreignId('grade_id')->constrained('grades')->onDelete('cascade');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->foreignId('teacher_id')->constrained('teachers')->onDelete('cascade');
-            $table->enum('status', ['submitted', ' unsubmitted']);
+            $table->json('status')->nullable();
             $table->datetime('created_at')->nullable()->constrained();
             $table->datetime('updated_at')->nullable()->constrained();
             $table->datetime('deleted_at')->nullable()->constrained();
