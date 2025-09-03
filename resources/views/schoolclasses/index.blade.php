@@ -5,7 +5,7 @@
         <div class="row py-3 mt-4">
             <div class="col-lg-12 margin-tb">
                 <div class="pull-left">
-                    <h3>Class Information</h3>
+                    <h3>Class Timetable (Schedule)</h3>
                 </div>
                 <div class="d-flex mb-2">
                     <a class="btn custom-create-btn" href="{{ route('schoolclasses.create') }}">
@@ -25,29 +25,27 @@
                 <tr>
                     <th>Grade</th>
                     <th>Subject</th>
-                    <th>Teacher</th>
                     <th>Room</th>
-                    <th>Time</th>
                     <th>Day</th>
+                    <th>Time</th>
+                    <th>Teacher</th>
                     <th width="280px">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($classes as $class)
                     <tr>
-                        <td>{{ "" }}</td>
+                        <td>Grade - {{ $class->grade }}</td>
                         <td>{{ $class->subject }}</td>
-                        <td>{{ $class->teacher }}</td>
                         <td>{{ $class->classroom }}</td>
+                        <td>{{ $class->day_of_week }}</td>
                         <td> {{ date('h:i A', strtotime($class->start_time)) }} -
                             {{ date('h:i A', strtotime($class->end_time)) }}</td>
-                        <td>{{ $class->day_of_week }}</td>
+                        <td>{{ $class->teacher }}</td>
                         <td>
-                            <form action="" method="POST">
-                                <a class="btn btn-primary" href="">Edit</a>
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                            <form action="{{ route('schoolclasses.destroy', $class->id) }}" method="Put">
+                                <a class="btn btn-primary" href="{{ route('schoolclasses.edit', $class->id) }}">Edit</a>
+                                <button type="submit" formaction="{{ route('schoolclass.delete', $class->id) }}" class="btn btn-danger">Delete</button>
                             </form>
                         </td>
                     </tr>

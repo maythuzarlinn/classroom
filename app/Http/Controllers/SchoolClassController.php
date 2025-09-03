@@ -4,17 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Libs\SchoolClassLib;
 use App\Http\Requests\StoreClassRequest;
-use App\Http\Requests\UpdateClassRequest;
+use Illuminate\Http\RedirectResponse;
+use App\Models\SchoolClass;
 
 class SchoolClassController extends Controller
 {
-        private $class_lib;
+    private $class_lib;
 
     public function __construct(SchoolClassLib $class_lib)
     {
         $this->class_lib = $class_lib;
     }
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -40,34 +41,43 @@ class SchoolClassController extends Controller
      */
     public function store(StoreClassRequest $request)
     {
-         $data = $request->validated();
+        $data = $request->validated();
         $this->class_lib->store($data);
 
         return redirect()->route('schoolclasses.index')->with('success', 'Class has been created successfully.');
     }
-    
+
 
     /**
      * Show the form for editing the specified resource.
      */
-    // public function edit(Class $class)
-    // {
-    //     //
-    // }
+    public function edit(SchoolClass $schoolclass)
+    {
+        $schoolclass->load('classroom.grade');
+        $classrooms = $this->class_lib->getClassroom();
+        $subjects = $this->class_lib->getSubject();
+        $teachers = $this->class_lib->getTeachers();
+        $grades = $this->class_lib->getGrades();
+        return view('schoolclasses.edit', compact('schoolclass', 'classrooms', 'subjects', 'teachers', 'grades'));
+    }
 
-    // /**
-    //  * Update the specified resource in storage.
-    //  */
-    // public function update(UpdateClassRequest $request, Class $class)
-    // {
-    //     //
-    // }
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(StoreClassRequest $request, SchoolClass $schoolclass)
+    {
+        $request->validated();
+        $this->class_lib->update($request->all(), $schoolclass);
 
-    // /**
-    //  * Remove the specified resource from storage.
-    //  */
-    // public function destroy(Class $class)
-    // {
-    //     //
-    // }
+        return redirect()->route('schoolclasses.index')->with('success', 'Class schedule has been updated successfully');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function delete($id): RedirectResponse
+    {;
+        $this->class_lib->destroy($id);
+        return redirect()->route('schoolclasses.index')->with('success', 'Class has been deleted successfully');
+    }
 }

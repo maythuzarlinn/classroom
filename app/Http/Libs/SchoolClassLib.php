@@ -3,6 +3,7 @@
 namespace App\Http\Libs;
 
 use App\Models\Classroom;
+use App\Models\Grade;
 use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\Teacher;
@@ -26,7 +27,7 @@ class SchoolClassLib
             ->join('teachers as teacher', 'school_classes.teacher_id', '=', 'teacher.id')
             ->join('classrooms as classroom', 'school_classes.classroom_id', '=', 'classroom.id')
             ->join('subjects as subject', 'school_classes.subject_id', '=', 'subject.id')
-            ->select('school_classes.*','teacher.name as teacher', 'classroom.name as classroom', 'subject.title as subject')
+            ->select('school_classes.*', 'teacher.name as teacher', 'classroom.name as classroom', 'classroom.grade_id as grade', 'subject.title as subject')
             ->orderBy('id', 'asc')
             ->paginate(7);
         return $school_class_list;
@@ -63,6 +64,22 @@ class SchoolClassLib
     }
 
     /**
+     * Get list of resource by ascending order.
+     * 
+     * @return object
+     */
+    public function getGrades(): object
+    {
+        return Grade::all();
+    }
+
+    public function getEditedClass($class_id): object
+    {
+        return  SchoolClass::where('id', $class_id)
+            ->get();
+    }
+
+    /**
      * Store resource.
      * 
      * @return object
@@ -84,13 +101,18 @@ class SchoolClassLib
      * 
      * @return void
      */
-    public function update($data, $classroom): void
+    public function update($data, $class): void
     {
         try {
             DB::beginTransaction();
-            SchoolClass::where('id', $classroom->id)
+            SchoolClass::where('id', $class->id)
                 ->update([
-                    'name' => $data['name'],
+                    'classroom_id' => $data['classroom_id'],
+                    'day_of_week' => $data['day_of_week'],
+                    'start_time' => $data['start_time'],
+                    'end_time' => $data['end_time'],
+                    'subject_id' => $data['subject_id'],
+                    'teacher_id' => $data['teacher_id'],
                 ]);
             DB::commit();
         } catch (Exception $error) {
@@ -104,12 +126,11 @@ class SchoolClassLib
      * 
      * @return void
      */
-    public function destroy($classroom): void
+    public function destroy($class_id): void
     {
         try {
             DB::beginTransaction();
-            $classroom = SchoolClass::find($classroom);
-            $classroom->each->delete();
+            SchoolClass::where('id', $class_id)->delete();
             DB::commit();
         } catch (Exception $error) {
             report($error);

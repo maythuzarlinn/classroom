@@ -49,6 +49,10 @@ Route::resource('grades', GradeController::class);
 
 //Class Routes
 Route::resource('schoolclasses', SchoolClassController::class);
+Route::namespace('Schoolclass')->prefix('schoolclass')->name('schoolclass.')->group(function () {
+Route::get('/delete/{id}', [SchoolClassController::class, 'delete'])->name('delete');
+Route::post('/delete/{id}', [SchoolClassController::class, 'delete'])->name('delete');
+});
 
 //Subject Routes
 Route::resource('subjects', SubjectController::class);
