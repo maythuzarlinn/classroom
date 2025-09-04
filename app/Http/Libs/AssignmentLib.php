@@ -3,7 +3,6 @@
 namespace App\Http\Libs;
 
 use App\Models\Assignment;
-use App\Models\Attendance;
 use App\Models\Grade;
 use App\Models\Student;
 use App\Models\Subject;

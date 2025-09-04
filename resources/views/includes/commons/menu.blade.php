@@ -6,7 +6,6 @@
     <a href="{{ url('/dashboard') }}" class="list-group-item list-group-item-action">
         <i class="fa-solid fa-chart-line"></i>
         <span class="d-none d-lg-inline">Dashboard</span>
-        <span class="d-none d-lg-inline badge bg-primary rounded-pill float-end">8</span>
     </a>
     <a href="{{ route('schoolclasses.index') }}" class="list-group-item list-group-item-action">
         <i class="fa-solid fa-calendar"></i>
@@ -24,7 +23,7 @@
         <i class="fa-regular fa-calendar-days"></i>
         <span class="d-none d-lg-inline">Exam / Test Schedule</span>
     </a>  
-    <a href="{{ route('exam.result') }}" class="list-group-item list-group-item-action">
+    <a href="#" class="list-group-item list-group-item-action">
         <i class="fa-regular fa-calendar-days"></i>
         <span class="d-none d-lg-inline">Exam Result</span>
     </a>   

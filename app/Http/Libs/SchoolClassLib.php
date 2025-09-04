@@ -50,7 +50,11 @@ class SchoolClassLib
      */
     public function getSubject(): object
     {
-        return Subject::all();
+        $subjects = Subject::selectRaw('MIN(id) as id, title, MIN(grade_id) as grade_id')
+            ->groupBy('title')
+            ->get();
+
+        return $subjects;
     }
     /**
      * Get list of resource by ascending order.

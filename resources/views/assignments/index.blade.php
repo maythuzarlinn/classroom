@@ -23,14 +23,14 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Grade</th>
-                    <th>Subject</th>
-                    <th>Title</th>
+                    <th width="80px">Grade</th>
+                    <th width="80px">Subject</th>
+                    <th>Title    </th>
                     <th>Description</th>
-                    <th>Due Date</th>
-                    <th>Day Left</th>
+                    <th width="120px">Due Date</th>
+                    <th width="80px">Day Left</th>
                     <th>Assign by</th>
-                    <th width="280px">Detail</th>
+                    <th width="210px">Detail</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,7 +38,7 @@
                     <tr>
                         <td>{{ $assignment->grade }}</td>
                         <td>{{ $assignment->subject }}</td>
-                        <td>{{ $assignment->title }}</td>
+                        <td>{{ $assignment->title}}</td>
                         <td>{{ $assignment->description }}</td>
                         <td>{{ $assignment->deadline }}</td>
                         <td>{{ $assignment->day_left }}</td>

@@ -22,14 +22,59 @@
                             <div class="row mb-4 align-items-center">
                                 <label class="col-sm-3 col-form-label text-end">Date</label>
                                 <div class="col-sm-9">
-                                    <input id="datepicker" type="date" name="date" value="{{ old('date', $exam->date) }}"
+                                    <input id="datepicker" type="date" name="date"
+                                        value="{{ old('date', $exam->date) }}"
                                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                     placeholder="yyyy-mm-dd">
+                                        placeholder="yyyy-mm-dd">
                                     @error('date')
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>    
+                            </div>
+                            <!-- Start Time -->
+                            <div class="row mb-4 align-items-center">
+                                <label for="start_time" class="col-sm-3 col-form-label text-end">Start Time</label>
+                                <div class="col-sm-9">
+                                    <input type="time" name="start_time" id="start_time"
+                                        value="{{ old('start_time', $exam->start_time) }}" placeholder="Eg. 01:00 PM"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    @error('start_time')
+                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- End Time -->
+                            <div class="row mb-4 align-items-center">
+                                <label for="end_time" class="col-sm-3 col-form-label text-end">End Time</label>
+                                <div class="col-sm-9">
+                                    <input type="time" name="end_time" id="end_time"
+                                        value="{{ old('end_time', $exam->end_time) }}" placeholder="Eg. 01:00 PM"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    @error('end_time')
+                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <!-- Classroom Name -->
+                            <div class="row mb-4 align-items-center">
+                                <label for="classroom_id" class="col-sm-3 col-form-label text-end">Room</label>
+                                <div class="col-sm-9">
+                                    <select name="classroom_id" id="classroom_id"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        <option value=""> Select Room </option>
+                                        @foreach ($classrooms as $classroom)
+                                            <option value="{{ $classroom->id }}"
+                                                {{ old('classroom_id', $classroom->grade_id) == $exam->classroom_id ? 'selected' : '' }}>
+                                                {{ $classroom->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('classroom_id')
+                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                             <!-- Subject -->
                             <div class="row mb-4 align-items-center">
                                 <label for="subject_id" class="col-sm-3 col-form-label text-end">Subject</label>
@@ -48,7 +93,7 @@
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>                            
+                            </div>
                             <!-- Grade -->
                             <div class="row mb-4 align-items-center">
                                 <label for="grade_id" class="col-sm-3 col-form-label text-end">Grade</label>
@@ -74,7 +119,8 @@
                                 <div class="col-sm-9">
                                     <input type="text" name="description" id="description"
                                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                        value="{{ old('description', $exam->description) }}" placeholder="Eg.Lesson-1 exercise">
+                                        value="{{ old('description', $exam->description) }}"
+                                        placeholder="Eg.Lesson-1 exercise">
                                     @error('description')
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                                     @enderror
@@ -90,15 +136,15 @@
                         </form>
                     </div>
                 </div>
-            <div>
-        </div>
-    <div>
-@endsection
-@section('script')
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-    flatpickr("#datepicker", {
-        dateFormat: "Y-m-d", // format for saving in DB
-    });
-</script>
-@endsection
+                <div>
+                </div>
+                <div>
+                @endsection
+                @section('script')
+                    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                    <script>
+                        flatpickr("#datepicker", {
+                            dateFormat: "Y-m-d", // format for saving in DB
+                        });
+                    </script>
+                @endsection

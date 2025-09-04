@@ -80,5 +80,6 @@ Route::resource('exams', ExamController::class);
 Route::namespace('Exam')->prefix('exam')->name('exam.')->group(function () {
 Route::get('/delete/{id}', [ExamController::class, 'delete'])->name('delete');
 Route::post('/delete/{id}', [ExamController::class, 'delete'])->name('delete');
-Route::get('/result', [ExamController::class, 'result'])->name('result');
+Route::get('/assign/{id}/{exam_id}', [ExamController::class, 'show'])->name('assign');
+Route::post('/assign/{id}/{exam_id}', [ExamController::class, 'show'])->name('assign');
 });

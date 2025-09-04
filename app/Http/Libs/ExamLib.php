@@ -2,8 +2,9 @@
 
 namespace App\Http\Libs;
 
-use App\Models\Assignment;
+use App\Models\Classroom;
 use App\Models\Exam;
+use App\Models\ExamResult;
 use App\Models\Grade;
 use App\Models\Student;
 use App\Models\Subject;
@@ -26,9 +27,10 @@ class ExamLib
                     ->orWhere('exams.description', 'LIKE', '%' . request('search') . '%');
             })
             ->whereNull('exams.deleted_at')
+            ->join('classrooms as classroom', 'exams.classroom_id', '=', 'classroom.id')
             ->join('subjects as subject', 'exams.subject_id', '=', 'subject.id')
             ->join('grades as grade', 'exams.grade_id', '=', 'grade.id')
-            ->select('exams.*', 'subject.title as subject', 'grade.title as grade')
+            ->select('exams.*', 'classroom.name as room', 'subject.title as subject', 'grade.title as grade')
             ->orderBy('id', 'asc')
             ->paginate(7);
         return $exam_list;
@@ -62,6 +64,16 @@ class ExamLib
      * @return object
      */
 
+    public function getClassrooms(): object
+    {
+        return Classroom::all();
+    }
+    /**
+     * Get list of resource by ascending order.
+     * 
+     * @return object
+     */
+
     public function getTeachers(): object
     {
         return Teacher::all();
@@ -76,17 +88,15 @@ class ExamLib
         return $student_list_by_grade;
     }
 
-    public function getSelectedAssignment($assignment_id): object
+    public function getSelectedExam($exam_id): object
     {
         return DB::table('exams')
-            ->where('exams.id', $assignment_id)
+            ->where('exams.id', $exam_id)
             ->whereNull('exams.deleted_at')
-            ->join('teachers as teacher', 'exams.teacher_id', '=', 'teacher.id')
             ->join('subjects as subject', 'exams.subject_id', '=', 'subject.id')
             ->join('grades as grade', 'exams.grade_id', '=', 'grade.id')
             ->select(
                 'exams.*',
-                'teacher.name as teacher',
                 'subject.title as subject',
                 'grade.title as grade'
             )
@@ -105,7 +115,11 @@ class ExamLib
             DB::beginTransaction();
             DB::commit();
             return Exam::create([
-                'date'    => $request->date,       
+                'date'    => $request->date,
+                'start_time'    => $request->start_time,
+                'end_time' => $request->end_time,
+                'date'    => $request->date,
+                'classroom_id' => $request->classroom_id,
                 'subject_id'  => $request->subject_id,
                 'grade_id'    => $request->grade_id,
                 'description' => $request->description ?? null,
@@ -121,20 +135,35 @@ class ExamLib
      * 
      * @return object
      */
-    public function store_assignment_status($request, $assignment_id)
+    public function store_exam_status($request, $grade_id, $subject_id, $exam_id)
     {
-        // Save assignment
         try {
             DB::beginTransaction();
+
+            foreach ($request['mark'] as $student_id => $mark) {
+                $status = $request['status'][$student_id] ?? null;
+
+                ExamResult::updateOrCreate(
+                    [
+                        'exam_id' => $exam_id,
+                        'grade_id' => $grade_id,
+                        'subject_id' => $subject_id,
+                        'student_id' => $student_id,
+                    ],
+                    [
+                        'mark'   => $mark,
+                        'status' => $status,
+                    ]
+                );
+            }
+
             DB::commit();
-            return  Assignment::where('id', $assignment_id)
-                ->update([
-                    'status' => json_encode($request['status']),
-                ]);
-        } catch (Exception $error) {
-            report($error);
+            return true;
+        } catch (\Exception $error) {
             DB::rollBack();
-        };
+            report($error);
+            return false;
+        }
     }
 
     /**
@@ -150,6 +179,9 @@ class ExamLib
             Exam::where('id', $exam->id)
                 ->update([
                     'date' => $data['date'],
+                    'start_time' => $data['start_time'],
+                    'end_time' => $data['end_time'],
+                    'classroom_id' => $data['classroom_id'],
                     'subject_id' => $data['subject_id'],
                     'grade_id' => $data['grade_id'],
                     'description' => $data['description'],

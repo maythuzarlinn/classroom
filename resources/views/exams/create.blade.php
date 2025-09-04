@@ -29,8 +29,47 @@
                                     @enderror
                                 </div>
                             </div>
-                            <!-- Subject -->
+                            <!-- Start Time -->
                             <div class="row mb-4 align-items-center">
+                                <label for="start_time" class="col-sm-3 col-form-label text-end">Start Time</label>
+                                <div class="col-sm-9">
+                                    <input type="time" name="start_time" id="start_time" placeholder="Eg. 01:00 PM"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    @error('start_time')
+                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- End Time -->
+                            <div class="row mb-4 align-items-center">
+                                <label for="end_time" class="col-sm-3 col-form-label text-end">End Time</label>
+                                <div class="col-sm-9">
+                                    <input type="time" name="end_time" id="end_time" placeholder="Eg. 01:00 PM"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    @error('end_time')
+                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <!-- Classroom Name -->
+                            <div class="row mb-4 align-items-center">
+                                <label for="classroom_id" class="col-sm-3 col-form-label text-end">Room</label>
+                                <div class="col-sm-9">
+                                    <select name="classroom_id" id="classroom_id"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        <option value="">Select Rroom</option>
+                                        @foreach ($classrooms as $classroom)
+                                            <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('classroom_id')
+                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror                                    
+                                </div>
+                            </div>
+                            <!-- Subject -->
+                            <div class="row mb-3 align-items-center">
                                 <label for="subject_id" class="col-sm-3 col-form-label text-end">Subject</label>
                                 <div class="col-sm-9">
                                     <select name="subject_id" id="subject_id"

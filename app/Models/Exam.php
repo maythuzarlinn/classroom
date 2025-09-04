@@ -10,5 +10,5 @@ class Exam extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['id', 'date', 'subject_id', 'grade_id', 'description', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['id', 'date', 'start_time', 'end_time', 'classroom_id', 'subject_id', 'grade_id', 'description', 'created_at', 'updated_at', 'deleted_at'];
 }

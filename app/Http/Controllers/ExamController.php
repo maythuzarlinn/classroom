@@ -6,6 +6,7 @@ use App\Http\Libs\ExamLib;
 use App\Models\Exam;
 use App\Http\Requests\StoreExamRequest;
 use App\Http\Requests\UpdateExamRequest;
+use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
@@ -30,9 +31,10 @@ class ExamController extends Controller
      */
     public function create()
     {
+        $classrooms = $this->exam_lib->getClassrooms();
         $grades = $this->exam_lib->getGrades();
         $subjects = $this->exam_lib->getSubjects();
-        return view('exams.create', compact('grades', 'subjects'));
+        return view('exams.create', compact('classrooms','grades', 'subjects'));
     }
 
     /**
@@ -57,9 +59,10 @@ class ExamController extends Controller
      */
     public function edit(Exam $exam)
     {
+        $classrooms = $this->exam_lib->getClassrooms();
         $grades = $this->exam_lib->getGrades();
         $subjects = $this->exam_lib->getSubjects();
-        return view('exams.edit', compact('exam', 'grades', 'subjects'));
+        return view('exams.edit', compact('exam','classrooms', 'grades', 'subjects'));
     }
 
     /**
@@ -81,4 +84,21 @@ class ExamController extends Controller
         $this->exam_lib->destroy($id);
         return redirect()->route('exams.index')->with('success', 'Exam has been deleted successfully');
     }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Request $request,Exam $exam, $grade_id, $exam_id)
+    {
+        $students_by_grade = $this->exam_lib->getStudentByGrade($grade_id);
+        
+        $exam = $this->exam_lib->getSelectedExam($exam_id);
+        $status = $exam->status ? json_decode($exam->status, true) : [];
+
+        if ($request->isMethod('post')) {
+            $this->exam_lib->store_exam_status($request, $exam->grade_id, $exam->subject_id, $exam_id);
+            return redirect()->route('exams.index')->with('success', 'Exam Result has been filled successfully.');;
+        }
+        return view('exams.assign', compact('exam', 'students_by_grade', 'grade_id', 'exam_id', 'status'));
+    }    
 }
