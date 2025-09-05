@@ -49,9 +49,32 @@ class ExamController extends Controller
     /**
      * Display the specified resource.
      */
-    public function result(Exam $exam)
+    public function result(Request $request)
     {
-        return view('exams.result');
+        $grades = \App\Models\Grade::orderBy('title')->get();
+        $grade_id = $request->input('grade_id');
+        $yearMonth = $request->input('year_month');
+
+        $results = \Illuminate\Support\Facades\DB::table('exam_results')
+            ->join('exams', 'exam_results.exam_id', '=', 'exams.id')
+            ->join('students', 'exam_results.student_id', '=', 'students.id')
+            ->join('subjects', 'exam_results.subject_id', '=', 'subjects.id')
+            ->select(
+                'exam_results.student_id',
+                'students.full_name as student_name',
+                'students.id',
+                'exam_results.subject_id',
+                'subjects.title as subject_name',
+                'exam_results.mark',
+                'exam_results.status',
+                'exams.date'
+            )
+            ->where('exam_results.grade_id', $grade_id)
+            ->whereRaw("DATE_FORMAT(exams.date, '%Y-%m') = ?", [$yearMonth])
+            ->get()
+            ->groupBy('student_id');
+
+        return view('exams.result', compact('results','grades'));
     }
 
     /**

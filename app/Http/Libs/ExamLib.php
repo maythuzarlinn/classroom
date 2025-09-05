@@ -213,4 +213,21 @@ class ExamLib
             DB::rollBack();
         };
     }
+
+    /**
+     * Get list of resource by ascending order.
+     * 
+     * @return object
+     */
+    public function showExamResult(): object
+    {
+        $exam_result = DB::table('exam_results')
+            ->when(request('search'), function ($query) {
+                $query->where('exam_results.grade_id', 'like', '%' . request('search') . '%');
+            })
+            ->whereNull('exam_results.deleted_at')
+            ->select('exam_results.*')
+            ->get();
+        return $exam_result;
+    }    
 }
