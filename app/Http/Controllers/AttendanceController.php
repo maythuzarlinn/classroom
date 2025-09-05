@@ -23,20 +23,19 @@ class AttendanceController extends Controller
     public function index(Request $request)
     {
         $attendances = $this->attendance_lib->index($request);
-        $search_term = $request->query('search');
         if (empty($attendances->items())) {
-            $post_list = "No data available in table";
+            $attendances = "No data available in table";
             return view('attendances.index',  [
-        'attendances' => $attendances,
-        'grade' => $request->grade,
-        'date' => $request->date,
-    ]);
+                'attendances' => $attendances,
+                'grade' => $request->grade,
+                'date' => $request->date,
+            ]);
         } else {
             return view('attendances.index',  [
-        'attendances' => $attendances,
-        'grade' => $request->grade,
-        'date' => $request->date,
-    ]);
+                'attendances' => $attendances,
+                'grade' => $request->grade,
+                'date' => $request->date,
+            ]);
         }
     }
 
@@ -70,9 +69,10 @@ class AttendanceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Attendance $attendance) {
+    public function edit(Attendance $attendance)
+    {
         $grades = $this->attendance_lib->getGrades();
-        return view('attendances.edit', compact('attendance', 'grades'));        
+        return view('attendances.edit', compact('attendance', 'grades'));
     }
 
     /**
@@ -80,7 +80,7 @@ class AttendanceController extends Controller
      */
     public function update(Request $request, Attendance $attendance)
     {
-        $success = $this->attendance_lib->update($request->all(), $attendance);
+        $this->attendance_lib->update($request->all(), $attendance);
         return redirect()->route('attendances.index')->with('success', 'Attendance has been updated successfully');
     }
 
@@ -95,5 +95,5 @@ class AttendanceController extends Controller
         $this->attendance_lib->destroy($id);
 
         return redirect()->route('attendances.index')->with('success', 'Attendance has been deleted successfully');
-    }   
+    }
 }

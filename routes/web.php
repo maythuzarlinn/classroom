@@ -82,4 +82,5 @@ Route::get('/delete/{id}', [ExamController::class, 'delete'])->name('delete');
 Route::post('/delete/{id}', [ExamController::class, 'delete'])->name('delete');
 Route::get('/assign/{id}/{exam_id}', [ExamController::class, 'show'])->name('assign');
 Route::post('/assign/{id}/{exam_id}', [ExamController::class, 'show'])->name('assign');
+Route::get('/result', [ExamController::class, 'result'])->name('result');
 });

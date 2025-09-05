@@ -23,14 +23,14 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Roll.no</th>
+                <th width="50px">Roll</th>
                 <th>Name</th>
                 <th>Grade</th>
-                <th>Date of Birth</th>
-                <th>Parent Name</th>
-                <th>Contact</th>
+                <th width="100px">Date of Birth</th>
+                <th width="120px">Parent Name</th>
+                <th width="210px">Contact</th>
                 <th>Status</th>
-                <th width="280px">Action</th>
+                <th width="180px">Action</th>
             </tr>
         </thead>
         <tbody>

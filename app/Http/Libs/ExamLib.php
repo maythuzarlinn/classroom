@@ -140,13 +140,16 @@ class ExamLib
         try {
             DB::beginTransaction();
 
+            // Loop through marks using student_id as key
             foreach ($request['mark'] as $student_id => $mark) {
+                // Match status by student_id (if available)
                 $status = $request['status'][$student_id] ?? null;
 
+                // Create or update exam result per student
                 ExamResult::updateOrCreate(
                     [
-                        'exam_id' => $exam_id,
-                        'grade_id' => $grade_id,
+                        'exam_id'   => $exam_id,
+                        'grade_id'  => $grade_id,
                         'subject_id' => $subject_id,
                         'student_id' => $student_id,
                     ],

@@ -44,8 +44,8 @@
                                 <td>{{ $student_by_grade->full_name }}</td>
                                 <td>
                                     <div class="mb-4 align-items-center">
-                                        <input type="text" name="mark[{{ $student_by_grade->id }}]" 
-                                            value="{{ old('mark.' . $student_by_grade->id) }}" 
+                                        <input type="text" name="mark[{{ $student_by_grade->id }}]"
+                                            value="{{ old('mark.' . $student_by_grade->id, $results[$student_by_grade->id]->mark ?? '') }}"
                                             class="" placeholder="">
                                         @error('mark')
                                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
@@ -57,17 +57,13 @@
                                         <div class="col-sm-9 items-center space-x-4 mt-1">
                                             <label class="inline-flex items-center">
                                                 <input type="radio" name="status[{{ $student_by_grade->id }}]"
-                                                    value="pass"
-                                                    class="text-blue-600 border-gray-300 focus:ring-blue-500"
-                                                    @if (isset($status[$student_by_grade->id]) && $status[$student_by_grade->id] === 'pass') checked @endif>
+                                                    value="pass" @if (isset($results[$student_by_grade->id]) && $results[$student_by_grade->id]->status === 'pass') checked @endif>
                                                 <span class="ml-2">Pass</span>
                                             </label>
 
                                             <label class="inline-flex items-center">
                                                 <input type="radio" name="status[{{ $student_by_grade->id }}]"
-                                                    value="fail"
-                                                    class="text-blue-600 border-gray-300 focus:ring-blue-500"
-                                                    @if (isset($status[$student_by_grade->id]) && $status[$student_by_grade->id] === 'fail') checked @endif>
+                                                    value="fail" @if (isset($results[$student_by_grade->id]) && $results[$student_by_grade->id]->status === 'fail') checked @endif>
                                                 <span class="ml-2">Fail</span>
                                             </label>
                                         </div>
