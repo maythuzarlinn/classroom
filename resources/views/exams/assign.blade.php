@@ -79,7 +79,7 @@
             <div class="row align-items-center mt-3">
                 <div class="col-sm-1">
                     <button type="submit" class="btn btn-success w-100"
-                        formaction="{{ route('exam.assign', ['id' => $grade_id, 'exam_id' => $exam_id]) }}">
+                        formaction="{{ route('exam.assign', ['exam_id' => $exam_id, 'subject_id' => $subject_id,]) }}">
                         Save
                     </button>
                 </div>

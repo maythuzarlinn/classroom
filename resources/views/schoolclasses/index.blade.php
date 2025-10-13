@@ -23,7 +23,6 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Grade</th>
                     <th>Subject</th>
                     <th>Room</th>
                     <th>Day</th>
@@ -35,7 +34,6 @@
             <tbody>
                 @foreach ($classes as $class)
                     <tr>
-                        <td>Grade - {{ $class->grade }}</td>
                         <td>{{ $class->subject }}</td>
                         <td>{{ $class->classroom }}</td>
                         <td>{{ $class->day_of_week }}</td>

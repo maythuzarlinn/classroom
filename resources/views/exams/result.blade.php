@@ -7,7 +7,7 @@
         <form method="GET" action="{{ route('exam.result') }}">
             <div class="row">
                 <div class="col-md-4">
-                    <select name="grade_id" id="grade_id" class="form-control" required>
+                    <select name="grade_id" id="grade_id" class="form-control">
                         <option value="">Select Grade</option>
                         @foreach ($grades as $grade)
                             <option value="{{ $grade->id }}" {{ request('grade_id') == $grade->id ? 'selected' : '' }}>
@@ -19,10 +19,22 @@
 
                 <div class="col-md-4">
                     <input type="month" name="year_month" id="year_month" value="{{ request('year_month') }}"
-                        class="form-control" placeholder="Select Month" required>
+                        class="form-control" placeholder="Select Month">
                 </div>
 
-                <div class="col-md-4 d-flex align-items-end">
+                <!-- Student ID -->
+                <div class="col-md-3">
+                    <input type="text" name="student_id" id="student_id" value="{{ request('student_id') }}"
+                        class="form-control" placeholder="Enter Student ID">
+                </div>
+
+                <!-- Exam Title -->
+                <div class="col-md-3 mt-2">
+                    <input type="text" name="exam_title" id="exam_title" value="{{ request('exam_title') }}"
+                        class="form-control" placeholder="Enter Exam Title">
+                </div>                
+
+                <div class="col-md-4 d-flex align-items-end mt-2">
                     <button type="submit" class="btn btn-primary">Search</button>
                 </div>
             </div>

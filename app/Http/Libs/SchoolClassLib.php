@@ -27,7 +27,7 @@ class SchoolClassLib
             ->join('teachers as teacher', 'school_classes.teacher_id', '=', 'teacher.id')
             ->join('classrooms as classroom', 'school_classes.classroom_id', '=', 'classroom.id')
             ->join('subjects as subject', 'school_classes.subject_id', '=', 'subject.id')
-            ->select('school_classes.*', 'teacher.name as teacher', 'classroom.name as classroom', 'classroom.grade_id as grade', 'subject.title as subject')
+            ->select('school_classes.*', 'teacher.name as teacher', 'classroom.name as classroom', 'subject.title as subject')
             ->orderBy('id', 'asc')
             ->paginate(7);
         return $school_class_list;

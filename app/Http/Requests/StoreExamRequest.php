@@ -21,11 +21,8 @@ class StoreExamRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'date' => 'required',
-            'subject_id' => 'required',
-            'grade_id' => 'required',
-            'description' => 'required',      
+        return [  
+            // 
         ];
     }
 }

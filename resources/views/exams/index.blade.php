@@ -44,7 +44,7 @@
                         <td>{{ $exam->description }}</td>
                         <td>
                             <form action="{{ route('exams.destroy', $exam->id) }}" method="PUT">
-                                <a class="btn btn-secondary" style="width:70px; font-size:8px;" href="{{ route('exam.assign', ['id' => $exam->grade_id, 'exam_id' => $exam->id]) }}">Assign/<br>ViewStudent</a>
+                                <a class="btn btn-secondary" style="width:70px; font-size:8px;" href="{{ route('exam.assign', ['exam_id' => $exam->exam_title, 'subject_id' => $exam->subject_id]) }}">Assign/<br>ViewStudent</a>
                                 <a class="btn btn-primary" href="{{ route('exams.edit', $exam->id) }}">Edit</a>
                                 <button type="submit" formaction="{{ route('exam.delete', $exam->id) }}"
                                     class="btn btn-danger">Delete</button>

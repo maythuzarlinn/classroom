@@ -52,11 +52,14 @@ class ExamController extends Controller
     public function result(Request $request)
     {
         $grades = \App\Models\Grade::orderBy('title')->get();
+
         $grade_id = $request->input('grade_id');
         $yearMonth = $request->input('year_month');
+        $student_id = $request->input('student_id');
+        $exam_title = $request->input('exam_title');
 
-        $results = \Illuminate\Support\Facades\DB::table('exam_results')
-            ->join('exams', 'exam_results.exam_id', '=', 'exams.id')
+        $query = \Illuminate\Support\Facades\DB::table('exam_results')
+            ->join('exams', 'exam_results.exam_title', '=', 'exams.exam_title')
             ->join('students', 'exam_results.student_id', '=', 'students.id')
             ->join('subjects', 'exam_results.subject_id', '=', 'subjects.id')
             ->select(
@@ -68,13 +71,28 @@ class ExamController extends Controller
                 'exam_results.mark',
                 'exam_results.status',
                 'exams.date'
-            )
-            ->where('exam_results.grade_id', $grade_id)
-            ->whereRaw("DATE_FORMAT(exams.date, '%Y-%m') = ?", [$yearMonth])
-            ->get()
-            ->groupBy('student_id');
+            );
 
-        return view('exams.result', compact('results','grades'));
+        // Conditional filters
+        if ($grade_id) {
+            $query->where('exam_results.grade_id', $grade_id);
+        }
+
+        if ($yearMonth) {
+            $query->whereRaw("DATE_FORMAT(exams.date, '%Y-%m') = ?", [$yearMonth]);
+        }
+
+        if ($student_id) {
+            $query->where('exam_results.student_id', $student_id);
+        }
+
+        if ($exam_title) {
+            $query->where('exam_results.exam_title', $exam_title);
+        }
+
+        $results = $query->get()->groupBy('student_id');
+
+        return view('exams.result', compact('results', 'grades'));
     }
 
     /**
@@ -111,13 +129,14 @@ class ExamController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Exam $exam, $grade_id, $exam_id)
+    public function show(Request $request, Exam $exam, $exam_id, $subject_id)
     {
+        $grade_id =  $this->exam_lib->getStudentGrade($exam_id);
         $students_by_grade = $this->exam_lib->getStudentByGrade($grade_id);
-        $exam = $this->exam_lib->getSelectedExam($exam_id);
-        $results = ExamResult::where('exam_id', $exam_id)
+        $exam = $this->exam_lib->getSelectedExam($exam_id, $subject_id);
+        $results = Exam::where('exam_title', $exam_id)
             ->where('grade_id', $grade_id)
-            ->where('subject_id', $exam->subject_id)
+            ->where('subject_id', $subject_id)
             ->get()
             ->keyBy('student_id');
 
@@ -126,6 +145,6 @@ class ExamController extends Controller
             return redirect()->route('exams.index')->with('success', 'Exam Result has been filled successfully.');
         }
 
-        return view('exams.assign', compact('exam', 'students_by_grade', 'grade_id', 'exam_id', 'results'));
+        return view('exams.assign', compact('exam', 'students_by_grade', 'grade_id', 'exam_id', 'subject_id', 'results'));
     }
 }

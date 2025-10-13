@@ -79,6 +79,14 @@ class ExamLib
         return Teacher::all();
     }
 
+    public function getStudentGrade($exam_title): int
+    {
+        $grade_id = Exam::where('exam_title', $exam_title)
+            ->value('grade_id'); // directly gets grade_id value
+
+        return $grade_id;
+    }    
+
     public function getStudentByGrade($grade_id): object
     {
         $student_list_by_grade = Student::where('grade_id', $grade_id)
@@ -88,10 +96,11 @@ class ExamLib
         return $student_list_by_grade;
     }
 
-    public function getSelectedExam($exam_id): object
+    public function getSelectedExam($exam_id, $subject_id): object
     {
         return DB::table('exams')
-            ->where('exams.id', $exam_id)
+            ->where('exams.exam_title', $exam_id)
+            ->where('exams.subject_id', $subject_id)
             ->whereNull('exams.deleted_at')
             ->join('subjects as subject', 'exams.subject_id', '=', 'subject.id')
             ->join('grades as grade', 'exams.grade_id', '=', 'grade.id')
@@ -110,24 +119,33 @@ class ExamLib
      */
     public function store($request)
     {
-        // Save assignment
+        // Calculate days left until deadline
+        $dayLeft = max(0, now()->diffInDays(\Carbon\Carbon::parse($request->date), false));
         try {
             DB::beginTransaction();
+
+            // Loop through each subject input
+            foreach ($request->subjects as $subjectData) {
+                Exam::create([
+                    'exam_title'   => $request->exam_title,
+                    'date'         => $request->date,
+                    'start_time'   => $subjectData['start_time'],
+                    'end_time'     => $subjectData['end_time'],
+                    'classroom_id' => $request->classroom_id,
+                    'subject_id'   => $subjectData['subject_id'],
+                    'grade_id'     => $request->grade_id,
+                    'description'  => $request->description ?? null,
+                    'day_left'     => $dayLeft,
+                ]);
+            }
+
             DB::commit();
-            return Exam::create([
-                'date'    => $request->date,
-                'start_time'    => $request->start_time,
-                'end_time' => $request->end_time,
-                'date'    => $request->date,
-                'classroom_id' => $request->classroom_id,
-                'subject_id'  => $request->subject_id,
-                'grade_id'    => $request->grade_id,
-                'description' => $request->description ?? null,
-            ]);
+            return redirect()->back()->with('status', 'Exam schedule created successfully!');
         } catch (Exception $error) {
-            report($error);
             DB::rollBack();
-        };
+            report($error);
+            return redirect()->back()->withErrors('Failed to create exam schedule.');
+        }
     }
 
     /**
@@ -137,6 +155,7 @@ class ExamLib
      */
     public function store_exam_status($request, $grade_id, $subject_id, $exam_id)
     {
+        // dd($request, $grade_id, $subject_id, $exam_id);
         try {
             DB::beginTransaction();
 
@@ -148,10 +167,10 @@ class ExamLib
                 // Create or update exam result per student
                 ExamResult::updateOrCreate(
                     [
-                        'exam_id'   => $exam_id,
-                        'grade_id'  => $grade_id,
-                        'subject_id' => $subject_id,
+                        'exam_title'   => $exam_id,  
                         'student_id' => $student_id,
+                        'subject_id' => $subject_id,
+                        'grade_id'  => $grade_id,                    
                     ],
                     [
                         'mark'   => $mark,
@@ -229,5 +248,5 @@ class ExamLib
             ->select('exam_results.*')
             ->get();
         return $exam_result;
-    }    
+    }
 }
