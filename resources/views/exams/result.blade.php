@@ -25,7 +25,7 @@
                 <!-- Student ID -->
                 <div class="col-md-3">
                     <input type="text" name="student_id" id="student_id" value="{{ request('student_id') }}"
-                        class="form-control" placeholder="Enter Student ID">
+                        class="form-control" placeholder="Enter Student Roll Number">
                 </div>
 
                 <!-- Exam Title -->
