@@ -18,20 +18,20 @@ class AttendanceLib
     public function index($request): object
     {
         $attendance_list = DB::table('attendances')
-        ->when($request->date, function ($query, $date) {
-            $query->where('attendances.date', 'like', "%$date%");
-        })
-        ->when($request->grade, function ($query, $grade) {
-            $query->where('grade.title', 'like', "%$grade%");
-        })
-        ->whereNull('attendances.deleted_at')
-        ->join('grades as grade', 'attendances.grade_id', '=', 'grade.id')
-        ->join('students as student', 'attendances.student_id', '=', 'student.id')
-        ->select('attendances.*', 'grade.title as grade', 'student.full_name as student')
-        ->orderBy('attendances.id', 'asc')
-        ->paginate(6);
+            ->when($request->date, function ($query, $date) {
+                $query->where('attendances.date', 'like', "%$date%");
+            })
+            ->when($request->grade, function ($query, $grade) {
+                $query->where('grade.title', 'like', "%$grade%");
+            })
+            ->whereNull('attendances.deleted_at')
+            ->join('grades as grade', 'attendances.grade_id', '=', 'grade.id')
+            ->join('students as student', 'attendances.student_id', '=', 'student.id')
+            ->select('attendances.*', 'grade.title as grade', 'student.full_name as student')
+            ->orderBy('attendances.id', 'asc')
+            ->paginate(6);
 
-    return $attendance_list;
+        return $attendance_list;
     }
 
     /**
@@ -63,6 +63,11 @@ class AttendanceLib
         $date = $request->input('date'); // attendance date
         $statuses = $request->input('status'); // array: [ student_id => status ]
 
+        // ✅ Skip process if no 'status' found or it's empty
+        if (empty($statuses) || !is_array($statuses)) {
+            return; // or optionally return response()->noContent() / redirect back
+        }
+
         foreach ($statuses as $studentId => $attendanceStatus) {
             Attendance::updateOrCreate(
                 [
@@ -70,7 +75,7 @@ class AttendanceLib
                     'student_id' => $studentId,
                 ],
                 [
-                    'grade_id' => $request->grade, // make sure you pass grade_id in form or detect it
+                    'grade_id' => $request->grade, // make sure this exists in form
                     'status' => $attendanceStatus,
                 ]
             );

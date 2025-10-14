@@ -23,10 +23,11 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th width="140px">Exam Title</th>
                     <th>Room</th>
                     <th>Grade</th>
                     <th>Subject</th>
-                    <th>Date</th>
+                    <th width="100px">Date</th>
                     <th>Time</th>
                     <th>Description</th>
                     <th class="text-center" width="280px">Action</th>
@@ -35,6 +36,7 @@
             <tbody>
                 @foreach ($exams as $exam)
                     <tr>
+                        <td>{{ $exam->exam_title }}</td>
                         <td>{{ $exam->room }}</td>
                         <td>{{ $exam->grade }}</td>
                         <td>{{ $exam->subject }}</td>

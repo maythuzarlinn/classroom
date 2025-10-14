@@ -58,6 +58,14 @@ class ExamController extends Controller
         $student_id = $request->input('student_id');
         $exam_title = $request->input('exam_title');
 
+        // ✅ Check if all search inputs are empty
+        if (!$grade_id && !$yearMonth && !$student_id && !$exam_title) {
+            // Return empty results
+            $results = collect(); // empty collection
+            return view('exams.result', compact('results', 'grades'));
+        }
+
+        // ✅ Only run the query if at least one filter is provided
         $query = \Illuminate\Support\Facades\DB::table('exam_results')
             ->join('exams', 'exam_results.exam_title', '=', 'exams.exam_title')
             ->join('students', 'exam_results.student_id', '=', 'students.id')
@@ -73,7 +81,6 @@ class ExamController extends Controller
                 'exams.date'
             );
 
-        // Conditional filters
         if ($grade_id) {
             $query->where('exam_results.grade_id', $grade_id);
         }
