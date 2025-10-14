@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Libs\SchoolClassLib;
 use App\Http\Requests\StoreClassRequest;
+use App\Models\Grade;
 use Illuminate\Http\RedirectResponse;
 use App\Models\SchoolClass;
 
@@ -33,7 +34,8 @@ class SchoolClassController extends Controller
         $classrooms = $this->class_lib->getClassroom();
         $subjects = $this->class_lib->getSubject();
         $teachers = $this->class_lib->getTeachers();
-        return view('schoolclasses.create', compact('classrooms', 'subjects', 'teachers'));
+        $grades = $this->class_lib->getGrades();
+        return view('schoolclasses.create', compact('classrooms', 'subjects', 'teachers','grades'));
     }
 
     /**

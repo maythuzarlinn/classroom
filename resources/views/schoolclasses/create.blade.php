@@ -18,7 +18,25 @@
                     <div class="card-body">
                         <form action="{{ route('schoolclasses.store') }}" method="POST">
                             @csrf
-
+                            <!-- Grade -->
+                            <div class="row mb-4 align-items-center">
+                                <label for="grade_id" class="col-sm-3 col-form-label text-end">Grade</label>
+                                <div class="col-sm-9">
+                                    <select name="grade_id" id="grade_id"
+                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                        <option value=""> Select Grade </option>
+                                        @foreach ($grades as $grade)
+                                            <option value="{{ $grade->id }}"
+                                                {{ old('grade_id') == $grade->id ? 'selected' : '' }}>
+                                                {{ $grade->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('grade_id')
+                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                             <!-- Classroom -->
                             <div class="row mb-4 align-items-center">
                                 <label for="classroom_id" class="col-sm-3 col-form-label text-end">Classroom</label>
@@ -32,7 +50,7 @@
                                     </select>
                                     @error('classroom_id')
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                    @enderror                                    
+                                    @enderror
                                 </div>
                             </div>
 
@@ -53,7 +71,7 @@
                                     </select>
                                     @error('day_of_week')
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                    @enderror                                       
+                                    @enderror
                                 </div>
                             </div>
 
@@ -65,8 +83,8 @@
                                         class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                     @error('start_time')
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                    @enderror                                
-                                    </div>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- End Time -->
@@ -77,8 +95,8 @@
                                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                     @error('end_time')
                                         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                    @enderror                                 
-                                    </div>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- Subject -->
