@@ -17,19 +17,40 @@ class SchoolClassLib
      * 
      * @return object
      */
-    public function index(): object
+    public function index($request): object
     {
         $school_class_list = DB::table('school_classes')
-            ->when(request('search'), function ($query) {
-                $query->where('school_classes.id', 'like', '%' . request('search') . '%');
-            })
             ->whereNull('school_classes.deleted_at')
+
+            // Filter by grade_id if provided
+            ->when($request->filled('grade_id'), function ($query) use ($request) {
+                $query->where('school_classes.grade_id', $request->grade_id);
+            })
+
+            // Filter by day_of_week if provided (partial match)
+            ->when($request->filled('day_of_week'), function ($query) use ($request) {
+                $query->where('school_classes.day_of_week', 'LIKE', '%' . $request->day_of_week . '%');
+            })
+
+            // Joins
             ->join('teachers as teacher', 'school_classes.teacher_id', '=', 'teacher.id')
             ->join('classrooms as classroom', 'school_classes.classroom_id', '=', 'classroom.id')
             ->join('subjects as subject', 'school_classes.subject_id', '=', 'subject.id')
-            ->select('school_classes.*', 'teacher.name as teacher', 'classroom.name as classroom', 'subject.title as subject')
+            ->join('grades as grade', 'school_classes.grade_id', '=', 'grade.id')
+
+            // Select fields
+            ->select(
+                'school_classes.*',
+                'teacher.name as teacher',
+                'classroom.name as classroom',
+                'subject.title as subject',
+                'grade.title as grade'
+            )
+
+            // Order and paginate
             ->orderBy('id', 'asc')
             ->paginate(7);
+
         return $school_class_list;
     }
 
@@ -88,16 +109,31 @@ class SchoolClassLib
      * 
      * @return object
      */
-    public function store($data): object
+    public function store($request)
     {
         try {
             DB::beginTransaction();
+
+            // Loop through each subject input
+            foreach ($request->input('subjects') as $subjectData) {
+                SchoolClass::create([
+                    'grade_id'     => $request->input('grade_id'),
+                    'classroom_id' => $request->input('classroom_id'),
+                    'day_of_week'  => $request->input('day_of_week'),
+                    'start_time'   => $subjectData['start_time'],
+                    'end_time'     => $subjectData['end_time'],
+                    'subject_id'   => $subjectData['subject_id'],
+                    'teacher_id'   => $request->input('teacher_id'), // use the main request teacher_id
+                ]);
+            }
+
             DB::commit();
-            return SchoolClass::create($data);
-        } catch (Exception $error) {
-            report($error);
+            return redirect()->back()->with('status', 'Timetable created successfully!');
+        } catch (\Exception $error) {
             DB::rollBack();
-        };
+            report($error);
+            return redirect()->back()->withErrors('Failed to create timetable.');
+        }
     }
 
     /**

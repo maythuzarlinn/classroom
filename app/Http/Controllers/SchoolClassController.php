@@ -7,6 +7,8 @@ use App\Http\Requests\StoreClassRequest;
 use App\Models\Grade;
 use Illuminate\Http\RedirectResponse;
 use App\Models\SchoolClass;
+use App\Models\Subject;
+use Illuminate\Http\Request;
 
 class SchoolClassController extends Controller
 {
@@ -20,10 +22,11 @@ class SchoolClassController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $classes = $this->class_lib->index();
-        return view('schoolclasses.index', compact('classes'));
+        $classes = $this->class_lib->index($request);
+        $grades = $this->class_lib->getGrades();
+        return view('schoolclasses.index', compact('classes', 'grades'));
     }
 
     /**
@@ -35,7 +38,7 @@ class SchoolClassController extends Controller
         $subjects = $this->class_lib->getSubject();
         $teachers = $this->class_lib->getTeachers();
         $grades = $this->class_lib->getGrades();
-        return view('schoolclasses.create', compact('classrooms', 'subjects', 'teachers','grades'));
+        return view('schoolclasses.create', compact('classrooms', 'subjects', 'teachers', 'grades'));
     }
 
     /**
@@ -43,12 +46,11 @@ class SchoolClassController extends Controller
      */
     public function store(StoreClassRequest $request)
     {
-        $data = $request->validated();
-        $this->class_lib->store($data);
+        // $data = $request->validated();
+        $this->class_lib->store($request);
 
         return redirect()->route('schoolclasses.index')->with('success', 'Class has been created successfully.');
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -81,5 +83,16 @@ class SchoolClassController extends Controller
     {;
         $this->class_lib->destroy($id);
         return redirect()->route('schoolclasses.index')->with('success', 'Class has been deleted successfully');
+    }
+
+    public function getSubjectsView($gradeId)
+    {
+        $subjects = Subject::where('grade_id', $gradeId)->get();
+
+        if ($subjects->isEmpty()) {
+            return '<div class="alert alert-warning text-center">No subjects found for this grade.</div>';
+        }
+
+        return view('partials.subjects_form', compact('subjects'))->render();
     }
 }

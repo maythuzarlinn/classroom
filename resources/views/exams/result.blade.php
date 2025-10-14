@@ -32,7 +32,7 @@
                 <div class="col-md-3 mt-2">
                     <input type="text" name="exam_title" id="exam_title" value="{{ request('exam_title') }}"
                         class="form-control" placeholder="Enter Exam Title">
-                </div>                
+                </div>
 
                 <div class="col-md-4 d-flex align-items-end mt-2">
                     <button type="submit" class="btn btn-primary">Search</button>

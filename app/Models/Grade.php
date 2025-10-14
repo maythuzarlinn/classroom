@@ -29,6 +29,11 @@ class Grade extends Model
     public function assignments()
     {
         return $this->hasMany(Assignment::class, 'grade_id');
-    }      
+    }    
+    
+    public function school_classes()
+    {
+        return $this->hasMany(SchoolClass::class, 'grade_id');
+    }  
  
 }

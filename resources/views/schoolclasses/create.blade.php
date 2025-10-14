@@ -22,14 +22,10 @@
                             <div class="row mb-4 align-items-center">
                                 <label for="grade_id" class="col-sm-3 col-form-label text-end">Grade</label>
                                 <div class="col-sm-9">
-                                    <select name="grade_id" id="grade_id"
-                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                                        <option value=""> Select Grade </option>
+                                    <select name="grade_id" id="grade_id" class="form-select">
+                                        <option value="">Select Grade</option>
                                         @foreach ($grades as $grade)
-                                            <option value="{{ $grade->id }}"
-                                                {{ old('grade_id') == $grade->id ? 'selected' : '' }}>
-                                                {{ $grade->title }}
-                                            </option>
+                                            <option value="{{ $grade->id }}">{{ $grade->title }}</option>
                                         @endforeach
                                     </select>
                                     @error('grade_id')
@@ -75,41 +71,13 @@
                                 </div>
                             </div>
 
-                            <!-- Start Time -->
-                            <div class="row mb-4 align-items-center">
-                                <label for="start_time" class="col-sm-3 col-form-label text-end">Start Time</label>
-                                <div class="col-sm-9">
-                                    <input type="time" name="start_time" id="start_time" placeholder="Eg. 01:00 PM"
-                                        class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                                    @error('start_time')
-                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- End Time -->
-                            <div class="row mb-4 align-items-center">
-                                <label for="end_time" class="col-sm-3 col-form-label text-end">End Time</label>
-                                <div class="col-sm-9">
-                                    <input type="time" name="end_time" id="end_time" placeholder="Eg. 01:00 PM"
-                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                                    @error('end_time')
-                                        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Subject -->
-                            <div class="row mb-4 align-items-center">
-                                <label for="subject_id" class="col-sm-3 col-form-label text-end">Subject</label>
-                                <div class="col-sm-9">
-                                    <select name="subject_id" id="subject_id"
-                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                                        <option value=""> Select Subject </option>
-                                        @foreach ($subjects as $subject)
-                                            <option value="{{ $subject->id }}">{{ $subject->title }}</option>
-                                        @endforeach
-                                    </select>
+                            <!-- Dynamic Subjects Section -->
+                            <div class="mb-4">
+                                <label class="col-form-label fw-bold mb-2">Subjects & Schedule</label>
+                                <div id="subjects-container">
+                                    <div class="text-muted text-center py-2 border rounded">
+                                        Select a grade to load subjects.
+                                    </div>
                                 </div>
                             </div>
 
@@ -140,4 +108,31 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#datepicker", { dateFormat: "Y-m-d" });
+
+    // 🧠 When grade changes → load subjects dynamically
+    document.getElementById('grade_id').addEventListener('change', function() {
+        const gradeId = this.value;
+        const container = document.getElementById('subjects-container');
+        container.innerHTML = '<div class="text-center text-secondary py-3">Loading subjects...</div>';
+
+        if (gradeId) {
+            fetch(`/grades/${gradeId}/subjects-view`)
+                .then(res => res.text())
+                .then(html => {
+                    container.innerHTML = html;
+                })
+                .catch(() => {
+                    container.innerHTML = '<div class="alert alert-danger">Error loading subjects.</div>';
+                });
+        } else {
+            container.innerHTML = '<div class="text-muted text-center py-2 border rounded">Select a grade to load subjects.</div>';
+        }
+    });
+</script>
 @endsection

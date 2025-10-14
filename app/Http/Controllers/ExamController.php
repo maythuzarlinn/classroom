@@ -154,4 +154,15 @@ class ExamController extends Controller
 
         return view('exams.assign', compact('exam', 'students_by_grade', 'grade_id', 'exam_id', 'subject_id', 'results'));
     }
+
+    public function getSubjectsView($gradeId)
+    {
+        $subjects = \App\Models\Subject::where('grade_id', $gradeId)->get();
+
+        if ($subjects->isEmpty()) {
+            return '<div class="alert alert-warning text-center">No subjects found for this grade.</div>';
+        }
+
+        return view('partials.subjects_form', compact('subjects'))->render();
+    }
 }

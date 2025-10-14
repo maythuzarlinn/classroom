@@ -48,6 +48,7 @@ Route::resource('classrooms', ClassroomController::class);
 Route::resource('grades', GradeController::class);
 
 //Class Routes
+Route::post('/schoolclasses', [SchoolClassController::class, 'store'])->name('schoolclasses.store');
 Route::resource('schoolclasses', SchoolClassController::class);
 Route::namespace('Schoolclass')->prefix('schoolclass')->name('schoolclass.')->group(function () {
 Route::get('/delete/{id}', [SchoolClassController::class, 'delete'])->name('delete');
@@ -84,3 +85,9 @@ Route::get('/assign/{exam_id}/{subject_id}', [ExamController::class, 'show'])->n
 Route::post('/assign/{exam_id}/{subject_id}', [ExamController::class, 'show'])->name('assign');
 Route::get('/result', [ExamController::class, 'result'])->name('result');
 });
+
+Route::get('/grades/{grade}/subjects-view', [ExamController::class, 'getSubjectsView']);
+Route::get('/grades/{grade}/subjects-view', [SchoolClassController::class, 'getSubjectsView']);
+
+
+

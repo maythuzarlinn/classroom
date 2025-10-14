@@ -22,11 +22,9 @@ class StoreClassRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'grade_id' => 'required',
             'classroom_id' => 'required',
             'day_of_week' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'subject_id' => 'required',
             'teacher_id' => 'required',
         ];
     }
